@@ -83,7 +83,7 @@ public class Query2 {
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    KafkaProperties kafkaProps = new KafkaProperties(kafkaZookeeper, kafkaBootstrap);
+    KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
     DataStream<String> text = env.addSource(new LineKafkaSource(kafkaTopic, kafkaProps));
 
     DataStream<WordWithCount> windowCounts = text
