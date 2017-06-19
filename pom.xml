@@ -293,6 +293,17 @@
       </properties>
     </profile>
 
+    <!-- PROFILE: query-2 -->
+    <profile>
+      <id>query-2</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <project.main>com.gmarciani.flink_scaffolding.query2.Query2</project.main>
+      </properties>
+    </profile>
+
     <!-- PROFILE: skip-tests -->
     <profile>
       <id>skip-tests</id>

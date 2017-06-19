@@ -25,39 +25,30 @@
  */
 package com.gmarciani.flink_scaffolding.common.source;
 
-import lombok.*;
+import org.apache.flink.streaming.util.serialization.AbstractDeserializationSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Properties;
+import java.io.IOException;
 
 /**
- * Collection of Kafka properties.
+ * The Kafka deserialization schema for words.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-@Getter
-@NoArgsConstructor
-public class KafkaProperties extends Properties {
+public class LineDeserializationSchema extends AbstractDeserializationSchema<String> {
 
-  public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
+  private static final Logger LOGGER = LoggerFactory.getLogger(LineDeserializationSchema.class);
 
-  public static final String ZOOKEEPER_CONNECT = "zookeeper.connect";
-
-  public KafkaProperties(String bootstrapServers, String zookeeperConnect) {
-    super();
-    super.put(BOOTSTRAP_SERVERS, bootstrapServers);
-    super.put(ZOOKEEPER_CONNECT, zookeeperConnect);
+  /**
+   * De-serializes the byte message.
+   *
+   * @param message The message, as a byte array.
+   * @return The de-serialized message as an object.
+   */
+  @Override
+  public String deserialize(byte[] message) throws IOException {
+    final String str = new String(message);
+    return str;
   }
-
-  public KafkaProperties(KafkaProperties other) {
-    super(other);
-  }
-
-  public void setBootstrapServers(String bootstrapServers) {
-    super.put(BOOTSTRAP_SERVERS, bootstrapServers);
-  }
-
-  public void setZookeeperConnect(String zookeeperConnect) {
-    super.put(ZOOKEEPER_CONNECT, zookeeperConnect);
-  }
-
 }

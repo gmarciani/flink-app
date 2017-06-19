@@ -37,14 +37,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * A source that reads links from a file.
+ * A source that reads lines from a file.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
- * @author Michele Porretta {@literal <mporretta@acm.org>}
  * @since 1.0
  */
-public class LinkSource extends RichSourceFunction<String> {
+public class LineSource extends RichSourceFunction<String> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LinkSource.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LineSource.class);
 
   private volatile boolean isRunning = true;
 
@@ -59,10 +58,10 @@ public class LinkSource extends RichSourceFunction<String> {
   private transient BufferedReader reader;
 
   /**
-   * Creates a new link source.
+   * Creates a new line source.
    * @param dataset the dataset path.
    */
-  public LinkSource(String dataset) {
+  public LineSource(String dataset) {
     this.dataset = dataset;
   }
 
@@ -78,13 +77,7 @@ public class LinkSource extends RichSourceFunction<String> {
 
     String line;
     while ((line = this.reader.readLine()) != null && line.length() != 0) {
-      try {
-        for (String word : line.split(" ")) {
-          ctx.collect(word);
-        }
-      } catch (IllegalArgumentException exc) {
-        LOGGER.warn("Malformed link: {}", line);
-      }
+      ctx.collect(line);
     }
 
     this.reader.close();

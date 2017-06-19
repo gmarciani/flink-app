@@ -68,6 +68,28 @@ The 1st query can be executed running:
 The output is saved to **${FLINK_HOME}/log/\*.out**.
 
 
+## Query 2
+The 2nd query requires a Kafka to be started.
+First you need to create the Kafka topic `sample-topic-1`:
+
+    $kafka-home> bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic sample-topic-1
+
+Test the topic creation:
+
+    $kafka-home> bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+To test message publishing:
+
+    $kafka-home> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic sample-topic-1
+
+    $kafka-home> bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sample-topic-1
+    
+The 1st query can be executed running:
+
+    $socstream_home> bash query-2.sh
+    
+The output is saved to **${FLINK_HOME}/log/\*.out**.
+
 
 ## Dataset
 The dataset is provided by ... and can be downloaded from [here](http://gmarciani.com).

@@ -23,41 +23,34 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.common.source;
+package com.gmarciani.flink_scaffolding.query2.operator;
 
-import lombok.*;
-
-import java.util.Properties;
+import com.gmarciani.flink_scaffolding.query2.Query2;
+import com.gmarciani.flink_scaffolding.query2.tuple.WordWithCount;
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.util.Collector;
 
 /**
- * Collection of Kafka properties.
+ * A simple words tokenizer.
+ * Used in {@link Query2}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-@Getter
-@NoArgsConstructor
-public class KafkaProperties extends Properties {
+public class WordTokenizer implements FlatMapFunction<String,WordWithCount> {
 
-  public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
-
-  public static final String ZOOKEEPER_CONNECT = "zookeeper.connect";
-
-  public KafkaProperties(String bootstrapServers, String zookeeperConnect) {
-    super();
-    super.put(BOOTSTRAP_SERVERS, bootstrapServers);
-    super.put(ZOOKEEPER_CONNECT, zookeeperConnect);
+  /**
+   * The core method of the FlatMapFunction. Takes an element from the input data set and transforms
+   * it into zero, one, or more elements.
+   *
+   * @param value The input value.
+   * @param out   The collector for returning result values.
+   * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
+   *                   to fail and may trigger recovery.
+   */
+  @Override
+  public void flatMap(String value, Collector<WordWithCount> out) throws Exception {
+    for (String word : value.split("\\s")) {
+      out.collect(new WordWithCount(word, 1L));
+    }
   }
-
-  public KafkaProperties(KafkaProperties other) {
-    super(other);
-  }
-
-  public void setBootstrapServers(String bootstrapServers) {
-    super.put(BOOTSTRAP_SERVERS, bootstrapServers);
-  }
-
-  public void setZookeeperConnect(String zookeeperConnect) {
-    super.put(ZOOKEEPER_CONNECT, zookeeperConnect);
-  }
-
 }

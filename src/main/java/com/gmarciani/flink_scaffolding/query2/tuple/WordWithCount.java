@@ -23,20 +23,30 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.common.source;
+package com.gmarciani.flink_scaffolding.query2.tuple;
 
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
-
-import java.util.Properties;
+import com.gmarciani.flink_scaffolding.query2.Query2;
 
 /**
- * A source that reads links from a Kafka producer.
+ * A tuple for word counting.
+ * Used in {@link Query2}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class LinkKafkaSource extends FlinkKafkaConsumer010<String> {
+public class WordWithCount {
 
-  public LinkKafkaSource(String topic, Properties props) {
-    super(topic, new LinkDeserializationSchema(), props);
+  public String word;
+  public long count;
+
+  public WordWithCount() { }
+
+  public WordWithCount(String word, long count) {
+    this.word = word;
+    this.count = count;
+  }
+
+  @Override
+  public String toString() {
+    return word + " : " + count;
   }
 }

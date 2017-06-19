@@ -23,25 +23,23 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
+package com.gmarciani.flink_scaffolding.query2.operator;
 
-package com.acmutv.socstream.common.source;
 
-import lombok.Getter;
+import com.gmarciani.flink_scaffolding.query2.Query2;
+import com.gmarciani.flink_scaffolding.query2.tuple.WordWithCount;
+import org.apache.flink.api.common.functions.ReduceFunction;
 
 /**
- * All sources type.
+ * A simple word counting reducer.
+ * Used in {@link Query2}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-@Getter
-public enum SourceType {
+public class WordCountReducer implements ReduceFunction<WordWithCount> {
 
-  FILE ("file"),
-  KAFKA ("kafka");
-
-  private final String name;
-
-  SourceType(final String name) {
-    this.name = name;
+  @Override
+  public WordWithCount reduce(WordWithCount value1, WordWithCount value2) throws Exception {
+    return new WordWithCount(value1.word, value1.count + value2.count);
   }
 }

@@ -24,32 +24,34 @@
   THE SOFTWARE.
  */
 
-package com.gmarciani.flink_scaffolding.query1;
+package com.gmarciani.flink_scaffolding.query2;
 
-import com.gmarciani.flink_scaffolding.query1.operator.WordCountReducer;
-import com.gmarciani.flink_scaffolding.query1.operator.WordTokenizer;
-import com.gmarciani.flink_scaffolding.query1.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.common.source.KafkaProperties;
+import com.gmarciani.flink_scaffolding.common.source.LineKafkaSource;
+import com.gmarciani.flink_scaffolding.query2.operator.WordCountReducer;
+import com.gmarciani.flink_scaffolding.query2.operator.WordTokenizer;
+import com.gmarciani.flink_scaffolding.query2.tuple.WordWithCount;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
 /**
- * The app word-point for {@code Query1} application.
+ * The app word-point for {@code Query2} application.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class Query1 {
+public class Query2 {
 
   /**
    * The program name.
    */
-  public static final String PROGRAM_NAME = "query-1";
+  public static final String PROGRAM_NAME = "query-2";
 
   /**
    * The program description.
    */
-  public static final String PROGRAM_DESCRIPTION = "Counts occurrences of words written to netcat, within time window.";
+  public static final String PROGRAM_DESCRIPTION = "Counts occurrences of words written to Kafka, within time window.";
 
   /**
    * The program main method.
@@ -59,7 +61,9 @@ public class Query1 {
 
     // CONFIGURATION
     ParameterTool parameter = ParameterTool.fromArgs(args);
-    final int port = Integer.valueOf(parameter.getRequired("port"));
+    final String kafkaZookeeper = parameter.get("kafka.zookeeper", "localhost:2181");
+    final String kafkaBootstrap = parameter.get("kafka.bootstrap", "localhost:9092");
+    final String kafkaTopic = parameter.get("kafka.topic", "sample-topic-1");
     final int parallelism = parameter.getInt("parallelism", 1);
 
     // ENVIRONMENT
@@ -72,12 +76,15 @@ public class Query1 {
     System.out.println("----------------------------------------------------------------------------");
     System.out.printf("%s\n", PROGRAM_DESCRIPTION);
     System.out.println("****************************************************************************");
-    System.out.println("Port: " + port);
+    System.out.println("Kafka Zookeeper: " + kafkaZookeeper);
+    System.out.println("Kafka Bootstrap: " + kafkaBootstrap);
+    System.out.println("Kafka Topic: " + kafkaTopic);
     System.out.println("Parallelism: " + parallelism);
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    DataStream<String> text = env.socketTextStream("localhost", port, "\n");
+    KafkaProperties kafkaProps = new KafkaProperties(kafkaZookeeper, kafkaBootstrap);
+    DataStream<String> text = env.addSource(new LineKafkaSource(kafkaTopic, kafkaProps));
 
     DataStream<WordWithCount> windowCounts = text
         .flatMap(new WordTokenizer())

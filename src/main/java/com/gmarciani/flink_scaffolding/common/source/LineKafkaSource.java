@@ -25,39 +25,18 @@
  */
 package com.gmarciani.flink_scaffolding.common.source;
 
-import org.apache.flink.streaming.util.serialization.AbstractDeserializationSchema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 
-import java.io.IOException;
+import java.util.Properties;
 
 /**
- * The Kafka deserialization schema for Link.
+ * A source that reads lines from a Kafka producer.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class LinkDeserializationSchema extends AbstractDeserializationSchema<String> {
+public class LineKafkaSource extends FlinkKafkaConsumer010<String> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LinkDeserializationSchema.class);
-
-  /**
-   * De-serializes the byte message.
-   *
-   * @param message The message, as a byte array.
-   * @return The de-serialized message as an object.
-   */
-  @Override
-  public String deserialize(byte[] message) throws IOException {
-    final String str = new String(message);
-    /*
-    Link link;
-    try {
-      link = Link.valueOf(str);
-    } catch (IllegalArgumentException exc) {
-      LOGGER.warn("Malformed link: {}", message);
-      link = null;
-    }
-    */
-    return str;
+  public LineKafkaSource(String topic, Properties props) {
+    super(topic, new LineDeserializationSchema(), props);
   }
 }
