@@ -26,11 +26,11 @@
 
 package com.gmarciani.flink_scaffolding.query2;
 
-import com.gmarciani.flink_scaffolding.common.source.KafkaProperties;
-import com.gmarciani.flink_scaffolding.common.source.LineKafkaSource;
+import com.gmarciani.flink_scaffolding.common.source.kafka.KafkaProperties;
+import com.gmarciani.flink_scaffolding.common.source.kafka.LineKafkaSource;
 import com.gmarciani.flink_scaffolding.query2.operator.WordCountReducer;
 import com.gmarciani.flink_scaffolding.query2.operator.WordTokenizer;
-import com.gmarciani.flink_scaffolding.query2.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -63,7 +63,7 @@ public class Query2 {
     ParameterTool parameter = ParameterTool.fromArgs(args);
     final String kafkaZookeeper = parameter.get("kafka.zookeeper", "localhost:2181");
     final String kafkaBootstrap = parameter.get("kafka.bootstrap", "localhost:9092");
-    final String kafkaTopic = parameter.get("kafka.topic", "sample-topic-1");
+    final String kafkaTopic = parameter.get("kafka.topic", "sample-topic-query-2");
     final int parallelism = parameter.getInt("parallelism", 1);
 
     // ENVIRONMENT

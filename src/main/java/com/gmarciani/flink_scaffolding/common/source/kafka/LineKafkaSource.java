@@ -23,32 +23,53 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.common.source;
+package com.gmarciani.flink_scaffolding.common.source.kafka;
 
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.apache.flink.streaming.util.serialization.AbstractDeserializationSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Properties;
 
 /**
- * The Kafka deserialization schema for words.
+ * A source that produces lines from a Kafka topic.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class LineDeserializationSchema extends AbstractDeserializationSchema<String> {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(LineDeserializationSchema.class);
+public class LineKafkaSource extends FlinkKafkaConsumer010<String> {
 
   /**
-   * De-serializes the byte message.
-   *
-   * @param message The message, as a byte array.
-   * @return The de-serialized message as an object.
+   * Constructs a new Kafka source parsing lines.
+   * @param topic Kafka topics.
+   * @param props Kafka properties.
    */
-  @Override
-  public String deserialize(byte[] message) throws IOException {
-    final String str = new String(message);
-    return str;
+  public LineKafkaSource(String topic, Properties props) {
+    super(topic, new LineDeserializationSchema(), props);
+  }
+
+  /**
+   * The Kafka deserialization schema for words.
+   * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
+   * @since 1.0
+   */
+  public static final class LineDeserializationSchema extends AbstractDeserializationSchema<String> {
+
+    /**
+     * The logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LineDeserializationSchema.class);
+
+    /**
+     * De-serializes the byte message.
+     *
+     * @param message The message, as a byte array.
+     * @return The de-serialized message as an object.
+     */
+    @Override
+    public String deserialize(byte[] message) throws IOException {
+      return new String(message);
+    }
   }
 }

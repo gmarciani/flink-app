@@ -24,7 +24,7 @@
   THE SOFTWARE.
  */
 
-package com.gmarciani.flink_scaffolding.common.source;
+package com.gmarciani.flink_scaffolding.common.source.fs;
 
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * A source that reads lines from a file.
+ * A source that reads lines from a fs.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */

@@ -23,17 +23,34 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
+package com.gmarciani.flink_scaffolding.query3.operator;
 
-package com.gmarciani.flink_scaffolding.common.db;
-
+import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.query3.Query3;
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.util.Collector;
 
 /**
- * Collections of Redis useful queries.
+ * A simple words tokenizer.
+ * Used in {@link Query3}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class RedisManager {
+public class WordTokenizer implements FlatMapFunction<String,WordWithCount> {
 
-
-
+  /**
+   * The core method of the FlatMapFunction. Takes an element from the input data set and transforms
+   * it into zero, one, or more elements.
+   *
+   * @param value The input value.
+   * @param out   The collector for returning result values.
+   * @throws Exception This method may throw exceptions. Throwing an exception will cause the operation
+   *                   to fail and may trigger recovery.
+   */
+  @Override
+  public void flatMap(String value, Collector<WordWithCount> out) throws Exception {
+    for (String word : value.split("\\s")) {
+      out.collect(new WordWithCount(word, 1L));
+    }
+  }
 }

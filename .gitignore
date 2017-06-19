@@ -1,7 +1,7 @@
 #==============================================================================#
 # PROJECT GITIGNORE
 #
-# This file specifies intentionally untracked files that git should ignore.
+# This fs specifies intentionally untracked files that git should ignore.
 # See: http://www.kernel.org/pub/software/scm/git/docs/gitignore.html
 #==============================================================================#
 
@@ -208,16 +208,16 @@ Temporary Items
 # Microsoft Windows
 #==============================================================================#
 #==============================================================================#
-#   Windows image file caches
+#   Windows image fs caches
 #==============================================================================#
 Thumbs.db
 ehthumbs.db
 #==============================================================================#
-#   Folder config file
+#   Folder config fs
 #==============================================================================#
 Desktop.ini
 #==============================================================================#
-#   Recycle Bin used on file shares
+#   Recycle Bin used on fs shares
 #==============================================================================#
 $RECYCLE.BIN/
 #==============================================================================#

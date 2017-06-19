@@ -1,10 +1,10 @@
 ################################################################################
 #  Licensed to the Apache Software Foundation (ASF) under one
-#  or more contributor license agreements.  See the NOTICE file
+#  or more contributor license agreements.  See the NOTICE fs
 #  distributed with this work for additional information
-#  regarding copyright ownership.  The ASF licenses this file
+#  regarding copyright ownership.  The ASF licenses this fs
 #  to you under the Apache License, Version 2.0 (the
-#  "License"); you may not use this file except in compliance
+#  "License"); you may not use this fs except in compliance
 #  with the License.  You may obtain a copy of the License at
 #
 #      http://www.apache.org/licenses/LICENSE-2.0
@@ -26,7 +26,7 @@
 # is only used in Standalone mode and may be overwritten on the JobManager side
 # by specifying the --host <hostname> parameter of the bin/jobmanager.sh executable.
 # In high availability mode, if you use the bin/start-cluster.sh script and setup
-# the conf/masters file, this will be taken care of automatically. Yarn/Mesos
+# the conf/masters fs, this will be taken care of automatically. Yarn/Mesos
 # automatically configure the host name based on the hostname of the node where the
 # JobManager runs.
 
@@ -117,8 +117,8 @@ jobmanager.web.port: 8081
 
 # Directory for storing checkpoints in a Flink-supported filesystem
 # Note: State backend must be accessible from the JobManager and all TaskManagers.
-# Use "hdfs://" for HDFS setups, "file://" for UNIX/POSIX-compliant file systems,
-# (or any local file system under Windows), or "S3://" for S3 file system.
+# Use "hdfs://" for HDFS setups, "fs://" for UNIX/POSIX-compliant fs systems,
+# (or any local fs system under Windows), or "S3://" for S3 fs system.
 #
 # state.backend.fs.checkpointdir: hdfs://namenode-host:port/flink-checkpoints
 
@@ -152,7 +152,7 @@ jobmanager.web.port: 8081
 # Path to the Hadoop configuration directory.
 #
 # This configuration is used when writing into HDFS. Unless specified otherwise,
-# HDFS file creation will use HDFS default settings with respect to block-size,
+# HDFS fs creation will use HDFS default settings with respect to block-size,
 # replication factor, etc.
 #
 # You can also directly specify the paths to hdfs-default.xml and hdfs-site.xml
@@ -173,7 +173,7 @@ jobmanager.web.port: 8081
 # the small ground truth for checkpoint and leader election, this location stores
 # the larger objects, like persisted dataflow graphs.
 # 
-# Must be a durable file system that is accessible from all nodes
+# Must be a durable fs system that is accessible from all nodes
 # (like HDFS, S3, Ceph, nfs, ...) 
 #
 # high-availability.storageDir: hdfs:///flink/ha/
@@ -197,7 +197,7 @@ jobmanager.web.port: 8081
 
 # Kerberos authentication for various components - Hadoop, ZooKeeper, and connectors -
 # may be enabled in four steps:
-# 1. configure the local krb5.conf file
+# 1. configure the local krb5.conf fs
 # 2. provide Kerberos credentials (either a keytab or a ticket cache w/ kinit)
 # 3. make the credentials available to various JAAS login contexts
 # 4. configure the connector to use JAAS/SASL

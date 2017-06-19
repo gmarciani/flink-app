@@ -29,6 +29,7 @@ package com.gmarciani.flink_scaffolding;
 import com.gmarciani.flink_scaffolding.common.ProgramDriver;
 import com.gmarciani.flink_scaffolding.query1.Query1;
 import com.gmarciani.flink_scaffolding.query2.Query2;
+import com.gmarciani.flink_scaffolding.query3.Query3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +66,10 @@ public class Driver {
      **********************************************************************************************/
       driver.addClass(Query2.PROGRAM_NAME, Query2.class, Query2.PROGRAM_DESCRIPTION);
 
+    /* *******************************************************************************************
+     * QUERY 3
+     **********************************************************************************************/
+      driver.addClass(Query3.PROGRAM_NAME, Query3.class, Query3.PROGRAM_DESCRIPTION);
 
       LOG.info("Running driver...");
 

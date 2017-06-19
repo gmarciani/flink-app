@@ -38,26 +38,26 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * A sink operator that writes tuples to a specific file.
+ * A sink operator that writes tuples to a specific fs.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
 public class ToStringSink<T> extends RichSinkFunction<T> {
 
   /**
-   * The output file path.
+   * The output fs path.
    */
   private String path;
 
   /**
-   * The writer to the output file.
+   * The writer to the output fs.
    */
   private BufferedWriter writer;
 
   /**
    * Creates a new sink.
-   * @param path the output file path.
-   * @throws IOException when file cannot be written.
+   * @param path the output fs path.
+   * @throws IOException when fs cannot be written.
    */
   public ToStringSink(@Nonnull final String path) throws IOException {
     this.path = path;

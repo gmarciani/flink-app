@@ -44,7 +44,7 @@ public class IOManager {
 
   /**
    * Returns an {@link InputStream} from a general resource.
-   * @param resource the resource locator (e.g.: path for local file, http url for remote file).
+   * @param resource the resource locator (e.g.: path for local fs, http url for remote fs).
    * @return the open {@link InputStream}.
    * @throws IOException when the {@link InputStream} cannot be opened.
    */
@@ -60,7 +60,7 @@ public class IOManager {
 
   /**
    * Returns an {@link OutputStream} from a general resource.
-   * @param resource the resource locator (e.g.: path for local file, http url for remote file).
+   * @param resource the resource locator (e.g.: path for local fs, http url for remote fs).
    * @return the open {@link OutputStream}.
    * @throws IOException when the {@link OutputStream} cannot be opened.
    */

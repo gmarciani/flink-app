@@ -27,7 +27,7 @@ package com.gmarciani.flink_scaffolding.query2.operator;
 
 
 import com.gmarciani.flink_scaffolding.query2.Query2;
-import com.gmarciani.flink_scaffolding.query2.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
 import org.apache.flink.api.common.functions.ReduceFunction;
 
 /**

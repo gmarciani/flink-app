@@ -23,28 +23,41 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.query1.tuple;
+package com.gmarciani.flink_scaffolding.common.source.kafka;
+
+import lombok.*;
+
+import java.util.Properties;
 
 /**
- * A tuple for word counting.
- * Used in {@link com.gmarciani.flink_scaffolding.query1.Query1}.
+ * Collection of Kafka properties.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class WordWithCount {
+@Getter
+@NoArgsConstructor
+public class KafkaProperties extends Properties {
 
-  public String word;
-  public long count;
+  public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
 
-  public WordWithCount() { }
+  public static final String ZOOKEEPER_CONNECT = "zookeeper.connect";
 
-  public WordWithCount(String word, long count) {
-    this.word = word;
-    this.count = count;
+  public KafkaProperties(String bootstrapServers, String zookeeperConnect) {
+    super();
+    super.put(BOOTSTRAP_SERVERS, bootstrapServers);
+    super.put(ZOOKEEPER_CONNECT, zookeeperConnect);
   }
 
-  @Override
-  public String toString() {
-    return word + " : " + count;
+  public KafkaProperties(KafkaProperties other) {
+    super(other);
   }
+
+  public void setBootstrapServers(String bootstrapServers) {
+    super.put(BOOTSTRAP_SERVERS, bootstrapServers);
+  }
+
+  public void setZookeeperConnect(String zookeeperConnect) {
+    super.put(ZOOKEEPER_CONNECT, zookeeperConnect);
+  }
+
 }

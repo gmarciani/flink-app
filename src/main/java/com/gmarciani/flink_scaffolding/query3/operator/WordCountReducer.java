@@ -23,39 +23,23 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
+package com.gmarciani.flink_scaffolding.query3.operator;
 
-package com.gmarciani.flink_scaffolding.common.db;
 
-import lombok.Data;
-import lombok.NonNull;
-
-import java.io.Serializable;
+import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.query3.Query3;
+import org.apache.flink.api.common.functions.ReduceFunction;
 
 /**
- * A Neo4j configuration model.
+ * A simple word counting reducer.
+ * Used in {@link Query3}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-@Data
-public class DbConfiguration implements Serializable {
+public class WordCountReducer implements ReduceFunction<WordWithCount> {
 
-  private static final long serialVersionUID = 1L;
-
-  /**
-   * The hostname of the NEO4J instance.
-   */
-  @NonNull
-  private String hostname;
-
-  /**
-   * The username of the NEO4J instance.
-   */
-  @NonNull
-  private String username;
-
-  /**
-   * The password of the NEO4J instance.
-   */
-  @NonNull
-  private String password;
+  @Override
+  public WordWithCount reduce(WordWithCount value1, WordWithCount value2) throws Exception {
+    return new WordWithCount(value1.word, value1.count + value2.count);
+  }
 }
