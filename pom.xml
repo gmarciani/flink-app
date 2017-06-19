@@ -278,7 +278,7 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <project.main>com.acmutv.socstream.Driver</project.main>
+        <project.main>com.gmarciani.flink_scaffolding.Driver</project.main>
       </properties>
     </profile>
 
@@ -289,7 +289,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <project.main>com.acmutv.socstream.query1.Query1</project.main>
+        <project.main>com.gmarciani.flink_scaffolding.query1.Query1</project.main>
       </properties>
     </profile>
 
