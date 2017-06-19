@@ -289,7 +289,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <project.main>com.gmarciani.flink_scaffolding.query1.Query1</project.main>
+        <project.main>com.gmarciani.flink_scaffolding.query1.TopologyQuery1</project.main>
       </properties>
     </profile>
 
@@ -300,7 +300,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <project.main>com.gmarciani.flink_scaffolding.query2.Query2</project.main>
+        <project.main>com.gmarciani.flink_scaffolding.query2.TopologyQuery2</project.main>
       </properties>
     </profile>
 
@@ -311,7 +311,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <project.main>com.gmarciani.flink_scaffolding.query3.Query3</project.main>
+        <project.main>com.gmarciani.flink_scaffolding.query3.TopologyQuery3</project.main>
       </properties>
     </profile>
 

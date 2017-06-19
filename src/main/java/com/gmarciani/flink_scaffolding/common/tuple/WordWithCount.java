@@ -25,9 +25,11 @@
  */
 package com.gmarciani.flink_scaffolding.common.tuple;
 
+import com.gmarciani.flink_scaffolding.query1.TopologyQuery1;
+
 /**
  * A tuple for word counting.
- * Used in {@link com.gmarciani.flink_scaffolding.query1.Query1}.
+ * Used in {@link TopologyQuery1}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */

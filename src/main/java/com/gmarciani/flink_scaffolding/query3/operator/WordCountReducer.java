@@ -27,12 +27,12 @@ package com.gmarciani.flink_scaffolding.query3.operator;
 
 
 import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
-import com.gmarciani.flink_scaffolding.query3.Query3;
+import com.gmarciani.flink_scaffolding.query3.TopologyQuery3;
 import org.apache.flink.api.common.functions.ReduceFunction;
 
 /**
  * A simple word counting reducer.
- * Used in {@link Query3}.
+ * Used in {@link TopologyQuery3}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */

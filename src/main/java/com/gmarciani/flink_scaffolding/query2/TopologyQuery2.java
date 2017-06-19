@@ -37,11 +37,11 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
 /**
- * The app word-point for {@code Query2} application.
+ * The topology for query-2.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class Query2 {
+public class TopologyQuery2 {
 
   /**
    * The program name.

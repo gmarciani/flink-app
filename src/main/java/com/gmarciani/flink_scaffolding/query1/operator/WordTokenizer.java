@@ -26,12 +26,13 @@
 package com.gmarciani.flink_scaffolding.query1.operator;
 
 import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.query1.TopologyQuery1;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
 /**
  * A simple words tokenizer.
- * Used in {@link com.gmarciani.flink_scaffolding.query1.Query1}.
+ * Used in {@link TopologyQuery1}.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
