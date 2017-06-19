@@ -69,6 +69,7 @@ public class TopologyQuery2 {
     // ENVIRONMENT
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
     env.setParallelism(parallelism);
+    final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
 
     // CONFIGURATION RESUME
     System.out.println("############################################################################");
@@ -83,7 +84,6 @@ public class TopologyQuery2 {
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
     DataStream<String> text = env.addSource(new LineKafkaSource(kafkaTopic, kafkaProps));
 
     DataStream<WordWithCount> windowCounts = text
