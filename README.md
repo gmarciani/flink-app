@@ -1,8 +1,6 @@
-# SOCSTREAM
+# FLINK SCAFFOLDING
 
-*Soccer analytics leveraging Flink. Solution to DEBS 2013 Grand Challenge.*
-
-*Coursework in Systems and Architectures for Big Data 2016/2017*
+*Scaffolding for Apache Flink applications*
 
 
 ## Requirements
@@ -35,17 +33,15 @@ Visit the Flink web dashboard at **http://localhost:8081**.
 
 The general job submission is as follows:
 
-    $flink_home> bin/flink jar <SOCSTREAM-JAR> [QUERY] [QUERY_OPTS]
+    $flink_home> bin/flink jar [PROGRAM_JAR] [QUERY] [QUERY_OPTS]
 
 where
-* **[SOCSTREAM-JAR]** is the local absolute path to the Socstream's JAR;
-* **[QUERY]** is the name of the Socstream query to execute;
+* **[PROGRAM_JAR]** is the local absolute path to the program's JAR;
+* **[QUERY]** is the name of the program query to execute;
 * **[QUERY_OPTS]** are query arguments (e.g. --optName optValue).
 
 Notice that the following map/reduce programs are available:
-* **socstream-query-1** the 1st query, leveraging ... ;
-* **socstream-query-2** the 2nd query, leveraging ... ;
-* **socstream-query-3** the 3rd query, leveraging ... .
+* **query-1** the 1st query, leveraging ... .
 
 The job can be interrupted typing **Ctrl+C**.
 
@@ -67,37 +63,14 @@ The 1st query requires a netcat session to be started:
     
 The 1st query can be executed running:
 
-    $socstream_home> bash socstream-query-1.sh
+    $socstream_home> bash query-1.sh
     
 The output is saved to **${FLINK_HOME}/log/\*.out**.
 
-
-## Query 2
-The 2nd query requires a netcat session to be started:
-
-    $> ncat 127.0.0.1 9000 -l
-    
-The 2nd query can be executed running:
-
-    $socstream_home> bash socstream-query-2.sh
-    
-The output is saved to **${FLINK_HOME}/log/\*.out**.
-
-
-## Query 3
-The 3rd query requires a netcat session to be started:
-
-    $> ncat 127.0.0.1 9000 -l
-    
-The 3rd query can be executed running:
-
-    $socstream_home> bash socstream-query-2.sh
-    
-The output is saved to **${FLINK_HOME}/log/\*.out**.
 
 
 ## Dataset
-The dataset is provided by DEBS Grand Challenge commitee and can be downloaded from [here](http://debs.org/?p=41).
+The dataset is provided by ... and can be downloaded from [here](http://gmarciani.com).
 
 
 ## Authors
