@@ -24,14 +24,15 @@
   THE SOFTWARE.
  */
 
-package com.gmarciani.flink_scaffolding.query1;
+package com.gmarciani.flink_scaffolding.query4;
 
-import com.gmarciani.flink_scaffolding.query1.operator.WordCountReducer;
-import com.gmarciani.flink_scaffolding.query1.operator.WordTokenizer;
+import com.gmarciani.flink_scaffolding.common.source.kafka.KafkaProperties;
+import com.gmarciani.flink_scaffolding.common.source.kafka.LineKafkaSource;
 import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
+import com.gmarciani.flink_scaffolding.query4.operator.WordCountReducer;
+import com.gmarciani.flink_scaffolding.query4.operator.WordTokenizer;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.FileSystem;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -41,25 +42,21 @@ import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The topology for query-1.
- * The application counts occurrences of words written to netcat, within ingestion time tumbling
- * windows.
- *
+ * The topology for query-4.
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class TopologyQuery1 {
+public class TopologyQuery4 {
 
   /**
    * The program name.
    */
-  public static final String PROGRAM_NAME = "query-1";
+  public static final String PROGRAM_NAME = "query-4";
 
   /**
    * The program description.
    */
-  public static final String PROGRAM_DESCRIPTION =
-      "Counts occurrences of words written to netcat, within ingestion time tumbling windows.";
+  public static final String PROGRAM_DESCRIPTION = "Counts occurrences of words written to Kafka, within time window.";
 
   /**
    * The program main method.
@@ -69,7 +66,9 @@ public class TopologyQuery1 {
 
     // CONFIGURATION
     ParameterTool parameter = ParameterTool.fromArgs(args);
-    final int port = Integer.valueOf(parameter.getRequired("port"));
+    final String kafkaZookeeper = parameter.get("kafka.zookeeper", "localhost:2181");
+    final String kafkaBootstrap = parameter.get("kafka.bootstrap", "localhost:9092");
+    final String kafkaTopic = parameter.get("kafka.topic", "sample-topic-query-3");
     final Path outputPath = FileSystems.getDefault().getPath(parameter.get("output", PROGRAM_NAME + ".out"));
     final long windowSize = parameter.getLong("windowSize", 10);
     final TimeUnit windowUnit = TimeUnit.valueOf(parameter.get("windowUnit", "SECONDS"));
@@ -77,8 +76,8 @@ public class TopologyQuery1 {
 
     // ENVIRONMENT
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-    env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
     env.setParallelism(parallelism);
+    final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
 
     // CONFIGURATION RESUME
     System.out.println("############################################################################");
@@ -86,14 +85,16 @@ public class TopologyQuery1 {
     System.out.println("----------------------------------------------------------------------------");
     System.out.printf("%s\n", PROGRAM_DESCRIPTION);
     System.out.println("****************************************************************************");
-    System.out.println("Port: " + port);
+    System.out.println("Kafka Zookeeper: " + kafkaZookeeper);
+    System.out.println("Kafka Bootstrap: " + kafkaBootstrap);
+    System.out.println("Kafka Topic: " + kafkaTopic);
     System.out.println("Output: " + outputPath);
     System.out.println("Window: " + windowSize + " " + windowUnit);
     System.out.println("Parallelism: " + parallelism);
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    DataStream<String> text = env.socketTextStream("localhost", port, "\n");
+    DataStream<String> text = env.addSource(new LineKafkaSource(kafkaTopic, kafkaProps));
 
     DataStream<WordWithCount> windowCounts = text
         .flatMap(new WordTokenizer())

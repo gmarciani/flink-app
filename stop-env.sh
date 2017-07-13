@@ -1,11 +1,22 @@
 #!/bin/bash
 
 ##
+# ENVARS
+##
+export APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+##
 # FLINK
 ##
-${FLINK_HOME}/bin/stop-local.sh
+${APP_HOME}/env/systemd/flink-manager.sh stop
+
+##
+# KAFKA
+##
+${APP_HOME}/env/systemd/kafka-manager.sh stop
 
 ##
 # ENVARS
 ##
-unset FLINK_SCAFFOLDING_HOME
+unset APP_HOME
+unset FLINK_CONF_DIR

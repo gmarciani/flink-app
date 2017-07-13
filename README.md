@@ -8,7 +8,7 @@ The system needs to be provided with the following packages:
 * Java >= 1.8.0
 * Maven >= 3.5.0
 * Hadoop = 2.8.0
-* Flink = 1.3.0 (scala 2.11)
+* Flink = 1.3.1 (scala 2.11)
 * Kafka >= 0.10.2.1
 
 and the following environment variables, pointing to the respective package home directory:
@@ -65,14 +65,26 @@ The 1st query can be executed running:
 
     $socstream_home> bash query-1.sh
     
-The output is saved to **${FLINK_HOME}/log/\*.out**.
+The output is saved to **$path/to/the/project/out/query1**.
 
 
 ## Query 2
-The 2nd query requires a Kafka to be started.
-First you need to create the Kafka topic `sample-topic-1`:
+The 2nd query requires a netcat session to be started:
 
-    $kafka-home> bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic sample-topic-1
+    $> ncat 127.0.0.1 9000 -l
+    
+The 2nd query can be executed running:
+
+    $socstream_home> bash query-1.sh
+    
+The output is saved to **$path/to/the/project/out/query1**.
+
+
+## Query 3
+The 3rd query requires a Kafka to be started.
+First you need to create the Kafka topic `sample-topic-query-3`:
+
+    $kafka-home> bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic sample-topic-query-3
 
 Test the topic creation:
 
@@ -80,13 +92,13 @@ Test the topic creation:
 
 To test message publishing:
 
-    $kafka-home> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic sample-topic-1
+    $kafka-home> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic sample-topic-query-3
 
-    $kafka-home> bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sample-topic-1
+    $kafka-home> bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sample-topic-query-3
     
 The 1st query can be executed running:
 
-    $socstream_home> bash query-2.sh
+    $socstream_home> bash query-3.sh
     
 The output is saved to **${FLINK_HOME}/log/\*.out**.
 
