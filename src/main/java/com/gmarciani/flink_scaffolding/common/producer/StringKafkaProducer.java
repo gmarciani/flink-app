@@ -54,8 +54,7 @@ public class StringKafkaProducer {
   }
 
   public void send(String topic, String word) {
-    String message = word;
-    ProducerRecord<String,String> record = new ProducerRecord<>(topic, message, message);
+    ProducerRecord<String,String> record = new ProducerRecord<>(topic, word, word);
     this.producer.send(record);
   }
 

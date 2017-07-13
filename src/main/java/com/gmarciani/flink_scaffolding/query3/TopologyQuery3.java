@@ -29,7 +29,6 @@ package com.gmarciani.flink_scaffolding.query3;
 import com.gmarciani.flink_scaffolding.common.extractor.EventTimestampExtractor;
 import com.gmarciani.flink_scaffolding.common.keyer.EventKeyer;
 import com.gmarciani.flink_scaffolding.common.source.kafka.KafkaProperties;
-import com.gmarciani.flink_scaffolding.query2.operator.StoppableTimedWordSocketSource;
 import com.gmarciani.flink_scaffolding.query2.operator.TimedWordCounterAggregator;
 import com.gmarciani.flink_scaffolding.query2.operator.TimedWordCounterWindowFunction;
 import com.gmarciani.flink_scaffolding.query2.operator.WordRankerWindowFunction;

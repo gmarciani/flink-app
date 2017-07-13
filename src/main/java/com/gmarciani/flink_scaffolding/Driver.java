@@ -30,7 +30,6 @@ import com.gmarciani.flink_scaffolding.common.ProgramDriver;
 import com.gmarciani.flink_scaffolding.query1.TopologyQuery1;
 import com.gmarciani.flink_scaffolding.query2.TopologyQuery2;
 import com.gmarciani.flink_scaffolding.query3.TopologyQuery3;
-import com.gmarciani.flink_scaffolding.query4.TopologyQuery4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

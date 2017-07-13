@@ -28,9 +28,6 @@ package com.gmarciani.flink_scaffolding.query2.operator;
 import com.gmarciani.flink_scaffolding.common.source.socket.AbstractStoppableSocketSource;
 import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 
-import static org.apache.flink.util.Preconditions.checkArgument;
-import static org.apache.flink.util.Preconditions.checkNotNull;
-
 /**
  * This class realizes ...
  *
@@ -67,15 +64,6 @@ public class StoppableTimedWordSocketSource extends AbstractStoppableSocketSourc
 
   @Override
   public void consumeTrailingData(String record, SourceContext<TimedWord> ctx) {
-    TimedWord value;
-    try {
-      value = TimedWord.valueOf(record);
-      if (value.getTimestamp() == Long.MAX_VALUE) {
-        super.cancel();
-      }
-      ctx.collect(value);
-    } catch (IllegalArgumentException exc) {
-      LOG.warn(exc.getMessage());
-    }
+    this.handleRecord(record, ctx);
   }
 }

@@ -25,7 +25,6 @@
  */
 package com.gmarciani.flink_scaffolding.common.source.socket;
 
-import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 import org.apache.flink.streaming.api.checkpoint.Checkpointed;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.util.IOUtils;

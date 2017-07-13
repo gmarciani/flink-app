@@ -26,7 +26,6 @@
 
 package com.gmarciani.flink_scaffolding.core;
 
-import com.gmarciani.flink_scaffolding.common.db.TestAllDb;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
