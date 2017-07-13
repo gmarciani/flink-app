@@ -18,20 +18,16 @@ OUTDIR="${APP_HOME}/out"
 OUTDIR_QUERY1="${OUTDIR}/query-1"
 OUTDIR_QUERY2="${OUTDIR}/query-2"
 OUTDIR_QUERY3="${OUTDIR}/query-3"
-OUTDIR_QUERY4="${OUTDIR}/query-4"
 mkdir -p ${OUTDIR_QUERY1}
 mkdir -p ${OUTDIR_QUERY2}
 mkdir -p ${OUTDIR_QUERY3}
-mkdir -p ${OUTDIR_QUERY4}
 chmod 777 ${OUTDIR_QUERY1}
 chmod 777 ${OUTDIR_QUERY2}
 chmod 777 ${OUTDIR_QUERY3}
-chmod 777 ${OUTDIR_QUERY4}
 
 sudo rm -f ${OUTDIR_QUERY1}/*
 sudo rm -f ${OUTDIR_QUERY2}/*
 sudo rm -f ${OUTDIR_QUERY3}/*
-sudo rm -f ${OUTDIR_QUERY4}/*
 
 ##
 # FLINK

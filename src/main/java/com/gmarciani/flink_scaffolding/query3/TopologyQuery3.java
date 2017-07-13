@@ -24,15 +24,22 @@
   THE SOFTWARE.
  */
 
-package com.gmarciani.flink_scaffolding.query4;
+package com.gmarciani.flink_scaffolding.query3;
 
+import com.gmarciani.flink_scaffolding.common.extractor.EventTimestampExtractor;
+import com.gmarciani.flink_scaffolding.common.keyer.EventKeyer;
 import com.gmarciani.flink_scaffolding.common.source.kafka.KafkaProperties;
-import com.gmarciani.flink_scaffolding.common.source.kafka.LineKafkaSource;
-import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
-import com.gmarciani.flink_scaffolding.query4.operator.WordCountReducer;
-import com.gmarciani.flink_scaffolding.query4.operator.WordTokenizer;
+import com.gmarciani.flink_scaffolding.query2.operator.StoppableTimedWordSocketSource;
+import com.gmarciani.flink_scaffolding.query2.operator.TimedWordCounterAggregator;
+import com.gmarciani.flink_scaffolding.query2.operator.TimedWordCounterWindowFunction;
+import com.gmarciani.flink_scaffolding.query2.operator.WordRankerWindowFunction;
+import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
+import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordRanking;
+import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordWithCount;
+import com.gmarciani.flink_scaffolding.query3.operator.StoppableTimedWordKafkaSource;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.FileSystem;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -42,40 +49,45 @@ import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The topology for query-4.
+ * The topology for query-3.
+ * The application ranks words written to Kafka by their occurrences, within event time tumbling
+ * windows.
+ *
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class TopologyQuery4 {
+public class TopologyQuery3 {
 
   /**
    * The program name.
    */
-  public static final String PROGRAM_NAME = "query-4";
+  public static final String PROGRAM_NAME = "query-3";
 
   /**
    * The program description.
    */
-  public static final String PROGRAM_DESCRIPTION = "Counts occurrences of words written to Kafka, within time window.";
+  public static final String PROGRAM_DESCRIPTION =
+      "Ranks words written to netcat by their occurrences, within event time tumbling windows.";
 
   /**
    * The program main method.
    * @param args the command line arguments.
    */
   public static void main(String[] args) throws Exception {
-
     // CONFIGURATION
     ParameterTool parameter = ParameterTool.fromArgs(args);
     final String kafkaZookeeper = parameter.get("kafka.zookeeper", "localhost:2181");
     final String kafkaBootstrap = parameter.get("kafka.bootstrap", "localhost:9092");
-    final String kafkaTopic = parameter.get("kafka.topic", "sample-topic-query-3");
+    final String kafkaTopic = parameter.get("kafka.topic", "topic-query-3");
     final Path outputPath = FileSystems.getDefault().getPath(parameter.get("output", PROGRAM_NAME + ".out"));
     final long windowSize = parameter.getLong("windowSize", 10);
     final TimeUnit windowUnit = TimeUnit.valueOf(parameter.get("windowUnit", "SECONDS"));
+    final int rankSize = parameter.getInt("rankSize, 3");
     final int parallelism = parameter.getInt("parallelism", 1);
 
     // ENVIRONMENT
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
     env.setParallelism(parallelism);
     final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
 
@@ -90,19 +102,23 @@ public class TopologyQuery4 {
     System.out.println("Kafka Topic: " + kafkaTopic);
     System.out.println("Output: " + outputPath);
     System.out.println("Window: " + windowSize + " " + windowUnit);
+    System.out.println("Rank Size: " + rankSize);
     System.out.println("Parallelism: " + parallelism);
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    DataStream<String> text = env.addSource(new LineKafkaSource(kafkaTopic, kafkaProps));
+    DataStream<TimedWord> timedWords = env.addSource(new StoppableTimedWordKafkaSource(kafkaTopic, kafkaProps))
+        .assignTimestampsAndWatermarks(new EventTimestampExtractor());
 
-    DataStream<WordWithCount> windowCounts = text
-        .flatMap(new WordTokenizer())
-        .keyBy("word")
+    DataStream<WindowWordWithCount> windowCounts = timedWords
+        .keyBy(new EventKeyer())
         .timeWindow(Time.of(windowSize, windowUnit))
-        .reduce(new WordCountReducer());
+        .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction());
 
-    windowCounts.writeAsText(outputPath.toAbsolutePath().toString(), FileSystem.WriteMode.OVERWRITE);
+    DataStream<WindowWordRanking> ranking = windowCounts.timeWindowAll(Time.of(windowSize, windowUnit))
+        .apply(new WordRankerWindowFunction(rankSize));
+
+    ranking.writeAsText(outputPath.toAbsolutePath().toString(), FileSystem.WriteMode.OVERWRITE);
 
     // EXECUTION
     env.execute(PROGRAM_NAME);

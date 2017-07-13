@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The topology for query-2.
- * The application counts and ranks occurrences of words written to netcat, within event time tumbling
+ * The application ranks words written to netcat by their occurrences, within event time tumbling
  * windows.
  *
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
@@ -63,7 +63,7 @@ public class TopologyQuery2 {
    * The program description.
    */
   public static final String PROGRAM_DESCRIPTION =
-      "Counts occurrences of words written to netcat, within event time tumbling windows.";
+      "Ranks words written to netcat by their occurrences, within event time tumbling windows.";
 
   /**
    * The program main method.
