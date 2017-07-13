@@ -13,7 +13,7 @@ FLINK_RUN="${FLINK_HOME}/bin/flink run"
 ##
 # SETUP
 ##
-mkdir -p "${APP_HOME}/out/query-1"
+mkdir -p "${APP_HOME}/out/query-2"
 
 ##
 # APP

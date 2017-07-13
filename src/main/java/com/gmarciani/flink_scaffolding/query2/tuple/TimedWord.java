@@ -27,6 +27,7 @@ package com.gmarciani.flink_scaffolding.query2.tuple;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * This class realizes a custom tuple for words.
@@ -48,6 +49,11 @@ public class TimedWord {
    * The word.
    */
   public String word;
+
+  /**
+   * Empty constructor.
+   */
+  public TimedWord() {}
 
   public static TimedWord valueOf(String s) {
     String fields[] = s.split(",", -1);

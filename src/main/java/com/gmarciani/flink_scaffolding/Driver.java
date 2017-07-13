@@ -71,11 +71,6 @@ public class Driver {
      **********************************************************************************************/
       driver.addClass(TopologyQuery3.PROGRAM_NAME, TopologyQuery3.class, TopologyQuery3.PROGRAM_DESCRIPTION);
 
-    /* *******************************************************************************************
-     * QUERY 4
-     **********************************************************************************************/
-      driver.addClass(TopologyQuery4.PROGRAM_NAME, TopologyQuery4.class, TopologyQuery4.PROGRAM_DESCRIPTION);
-
       LOG.info("Running driver...");
 
       exitCode = driver.run(args);

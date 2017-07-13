@@ -84,7 +84,11 @@ public class StoppableTimedWordKafkaSource extends FlinkKafkaConsumer010<TimedWo
 
     @Override
     public boolean isEndOfStream(TimedWord tuple) {
-      return (tuple != null) && tuple.getTimestamp() == Long.MAX_VALUE;
+      final boolean isEnd = (tuple != null) && tuple.getTimestamp() >= Long.MAX_VALUE;
+      if (isEnd) {
+        LOG.debug("EOS RECEIVED: SHUTTING DOWN");
+      }
+      return isEnd;
     }
   }
 }

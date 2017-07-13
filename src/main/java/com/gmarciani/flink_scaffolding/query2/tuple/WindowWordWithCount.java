@@ -29,6 +29,8 @@ import com.gmarciani.flink_scaffolding.query1.TopologyQuery1;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * A tuple for word counting.
  * Used in {@link TopologyQuery1}.
@@ -37,7 +39,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class WindowWordWithCount {
+public class WindowWordWithCount implements Serializable {
 
   /**
    * The timestamp for the window start instant.

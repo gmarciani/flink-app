@@ -26,9 +26,12 @@
 package com.gmarciani.flink_scaffolding.query2.tuple;
 
 import com.gmarciani.flink_scaffolding.query2.TopologyQuery2;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,8 +42,8 @@ import java.util.List;
  * @since 1.0
  */
 @Data
-@NoArgsConstructor
-public class WindowWordRanking {
+@AllArgsConstructor
+public class WindowWordRanking implements Serializable {
 
   /**
    * The timestamp for the window start instant.
@@ -55,5 +58,10 @@ public class WindowWordRanking {
   /**
    * The ranking.
    */
-  private List<WindowWordWithCount> rank;
+  private List<WindowWordWithCount> rank = new ArrayList<>();
+
+  /**
+   * Empty constructor.
+   */
+  public WindowWordRanking() {}
 }

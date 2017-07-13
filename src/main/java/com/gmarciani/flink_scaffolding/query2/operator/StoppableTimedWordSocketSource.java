@@ -53,7 +53,8 @@ public class StoppableTimedWordSocketSource extends AbstractStoppableSocketSourc
     TimedWord value;
     try {
       value = TimedWord.valueOf(record);
-      if (value.getTimestamp() == Long.MAX_VALUE) {
+      if (value.getTimestamp() >= Long.MAX_VALUE) {
+        LOG.debug("EOS RECEIVED: SHUTTING DOWN");
         super.cancel();
       }
       ctx.collect(value);

@@ -75,7 +75,7 @@ public class TopologyQuery2 {
     final Path outputPath = FileSystems.getDefault().getPath(parameter.get("output", PROGRAM_NAME + ".out"));
     final long windowSize = parameter.getLong("windowSize", 10);
     final TimeUnit windowUnit = TimeUnit.valueOf(parameter.get("windowUnit", "SECONDS"));
-    final int rankSize = parameter.getInt("rankSize, 3");
+    final int rankSize = parameter.getInt("rankSize", 3);
     final int parallelism = parameter.getInt("parallelism", 1);
 
     // ENVIRONMENT
