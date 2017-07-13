@@ -23,13 +23,11 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.query2.operator;
+package com.gmarciani.flink_scaffolding.common.source.socket;
 
 import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 import org.apache.flink.streaming.api.checkpoint.Checkpointed;
-import org.apache.flink.streaming.api.functions.source.SocketTextStreamFunction;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
-import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,38 +46,37 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class StoppableSocketSource implements SourceFunction<TimedWord> {
+public abstract class AbstractStoppableSocketSource<T> implements SourceFunction<T> {
 
   private static final long serialVersionUID = 1L;
 
-  private static final Logger LOG = LoggerFactory.getLogger(StoppableSocketSource.class);
+  protected static final Logger LOG = LoggerFactory.getLogger(AbstractStoppableSocketSource.class);
 
   /** Default delay between successive connection attempts. */
-  private static final int DEFAULT_CONNECTION_RETRY_SLEEP = 500;
+  protected static final int DEFAULT_CONNECTION_RETRY_SLEEP = 500;
 
   /** Default connection timeout when connecting to the server socket (infinite). */
-  private static final int CONNECTION_TIMEOUT_TIME = 0;
+  protected static final int CONNECTION_TIMEOUT_TIME = 0;
 
+  protected final String hostname;
+  protected final int port;
+  protected final String delimiter;
+  protected final long maxNumRetries;
+  protected final long delayBetweenRetries;
 
-  private final String hostname;
-  private final int port;
-  private final String delimiter;
-  private final long maxNumRetries;
-  private final long delayBetweenRetries;
+  protected transient Socket currentSocket;
 
-  private transient Socket currentSocket;
+  protected volatile boolean isRunning = true;
 
-  private volatile boolean isRunning = true;
-
-  public StoppableSocketSource(String hostname, int port) {
+  public AbstractStoppableSocketSource(String hostname, int port) {
     this(hostname, port, "\n", 0, DEFAULT_CONNECTION_RETRY_SLEEP);
   }
 
-  public StoppableSocketSource(String hostname, int port, String delimiter, long maxNumRetries) {
+  public AbstractStoppableSocketSource(String hostname, int port, String delimiter, long maxNumRetries) {
     this(hostname, port, delimiter, maxNumRetries, DEFAULT_CONNECTION_RETRY_SLEEP);
   }
 
-  public StoppableSocketSource(String hostname, int port, String delimiter, long maxNumRetries, long delayBetweenRetries) {
+  public AbstractStoppableSocketSource(String hostname, int port, String delimiter, long maxNumRetries, long delayBetweenRetries) {
     checkArgument(port > 0 && port < 65536, "port is out of range");
     checkArgument(maxNumRetries >= -1, "maxNumRetries must be zero or larger (num retries), or -1 (infinite retries)");
     checkArgument(delayBetweenRetries >= 0, "delayBetweenRetries must be zero or positive");
@@ -126,7 +123,7 @@ public class StoppableSocketSource implements SourceFunction<TimedWord> {
    * @param ctx The context to emit elements to and for accessing locks.
    */
   @Override
-  public void run(SourceContext<TimedWord> ctx) throws Exception {
+  public void run(SourceContext<T> ctx) throws Exception {
     final StringBuilder buffer = new StringBuilder();
     long attempt = 0;
 
@@ -151,18 +148,9 @@ public class StoppableSocketSource implements SourceFunction<TimedWord> {
               record = record.substring(0, record.length() - 1);
             }
 
-            TimedWord value;
-            try {
-              value = TimedWord.valueOf(record);
-              if (value.getTimestamp() == Long.MAX_VALUE) {
-                this.cancel();
-              }
-              ctx.collect(value);
-            } catch (IllegalArgumentException exc) {
-              LOG.warn(exc.getMessage());
-            } finally {
-              buffer.delete(0, delimPos + delimiter.length());
-            }
+            this.handleRecord(record, ctx);
+
+            buffer.delete(0, delimPos + delimiter.length());
           }
         }
       }
@@ -184,17 +172,7 @@ public class StoppableSocketSource implements SourceFunction<TimedWord> {
 
     // collect trailing data
     if (buffer.length() > 0) {
-      String record = buffer.toString();
-      TimedWord value;
-      try {
-        value = TimedWord.valueOf(record);
-        if (value.getTimestamp() == Long.MAX_VALUE) {
-          this.cancel();
-        }
-        ctx.collect(value);
-      } catch (IllegalArgumentException exc) {
-        LOG.warn(exc.getMessage());
-      }
+      this.consumeTrailingData(buffer.toString(), ctx);
     }
   }
 
@@ -224,4 +202,8 @@ public class StoppableSocketSource implements SourceFunction<TimedWord> {
       IOUtils.closeSocket(theSocket);
     }
   }
+
+  public abstract void handleRecord(String record, SourceContext<T> ctx);
+
+  public abstract void consumeTrailingData(String record, SourceContext<T> ctx);
 }

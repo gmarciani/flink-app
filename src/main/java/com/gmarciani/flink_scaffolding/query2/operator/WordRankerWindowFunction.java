@@ -23,10 +23,10 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.query3.operator;
+package com.gmarciani.flink_scaffolding.query2.operator;
 
-import com.gmarciani.flink_scaffolding.query3.tuple.WindowWordRanking;
-import com.gmarciani.flink_scaffolding.query3.tuple.WindowWordWithCount;
+import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordRanking;
+import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordWithCount;
 import lombok.Data;
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
@@ -82,7 +82,7 @@ public class WordRankerWindowFunction implements AllWindowFunction<WindowWordWit
   public void apply(TimeWindow window, Iterable<WindowWordWithCount> values, Collector<WindowWordRanking> out) throws Exception {
     List<WindowWordWithCount> tmp = new ArrayList<>();
     values.forEach(tmp::add);
-    tmp.sort((e1,e2) -> e2.compareTo(e1));
+    tmp.sort((e1,e2) -> Long.compare(e2.getCount(), e1.getCount()));
 
     this.ranking.setWStart(window.getStart());
     this.ranking.setWStop(window.getEnd());

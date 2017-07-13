@@ -23,9 +23,9 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.query3.operator;
+package com.gmarciani.flink_scaffolding.common.keyer;
 
-import com.gmarciani.flink_scaffolding.query3.tuple.TimedWord;
+import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

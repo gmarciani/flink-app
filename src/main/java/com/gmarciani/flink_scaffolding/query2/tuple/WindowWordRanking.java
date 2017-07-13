@@ -1,7 +1,7 @@
 /*
   The MIT License (MIT)
 
-  Copyright (c) 2017 Giacomo Marciani and Michele Porretta
+  Copyright (c) 2017 Giacomo Marciani
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +23,37 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.query2.operator;
+package com.gmarciani.flink_scaffolding.query2.tuple;
 
-import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
-import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.gmarciani.flink_scaffolding.query2.TopologyQuery2;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
- * The operator extracts the event timestamp.
+ * This class realizes a custom tuple for words.
+ * Used in {@link TopologyQuery2}.
  *
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-public class EventTimestampExtractor extends AscendingTimestampExtractor<TimedWord> {
+@Data
+@NoArgsConstructor
+public class WindowWordRanking {
 
   /**
-   * The logger.
+   * The timestamp for the window start instant.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(EventTimestampExtractor.class);
+  private long wStart;
 
-  @Override
-  public long extractAscendingTimestamp(TimedWord event) {
-    return event.getTimestamp();
-  }
+  /**
+   * The timestamp for the window stop instant.
+   */
+  private long wStop;
+
+  /**
+   * The ranking.
+   */
+  private List<WindowWordWithCount> rank;
 }

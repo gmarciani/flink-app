@@ -25,7 +25,6 @@
  */
 package com.gmarciani.flink_scaffolding.query2.operator;
 
-import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
 import com.gmarciani.flink_scaffolding.query2.TopologyQuery2;
 import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 import org.apache.flink.api.common.functions.FlatMapFunction;

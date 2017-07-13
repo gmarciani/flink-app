@@ -25,6 +25,7 @@ APP_OPTS="${APP_OPTS} --port 9000"
 APP_OPTS="${APP_OPTS} --output ${APP_HOME}/out/query-2/main.out"
 APP_OPTS="${APP_OPTS} --windowSize 10"
 APP_OPTS="${APP_OPTS} --windowUnit SECONDS"
+APP_OPTS="${APP_OPTS} --rankSize 3"
 APP_OPTS="${APP_OPTS} --parallelism 1"
 
 ##

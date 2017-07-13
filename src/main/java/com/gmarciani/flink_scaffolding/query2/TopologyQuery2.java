@@ -26,8 +26,12 @@
 
 package com.gmarciani.flink_scaffolding.query2;
 
+import com.gmarciani.flink_scaffolding.common.extractor.EventTimestampExtractor;
+import com.gmarciani.flink_scaffolding.common.keyer.EventKeyer;
+import com.gmarciani.flink_scaffolding.query2.operator.StoppableTimedWordSocketSource;
 import com.gmarciani.flink_scaffolding.query2.operator.*;
 import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
+import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordRanking;
 import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordWithCount;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.FileSystem;
@@ -42,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The topology for query-2.
- * The application counts occurrences of words written to netcat, within event time tumbling
+ * The application counts and ranks occurrences of words written to netcat, within event time tumbling
  * windows.
  *
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
@@ -72,6 +76,7 @@ public class TopologyQuery2 {
     final Path outputPath = FileSystems.getDefault().getPath(parameter.get("output", PROGRAM_NAME + ".out"));
     final long windowSize = parameter.getLong("windowSize", 10);
     final TimeUnit windowUnit = TimeUnit.valueOf(parameter.get("windowUnit", "SECONDS"));
+    final int rankSize = parameter.getInt("rankSize, 3");
     final int parallelism = parameter.getInt("parallelism", 1);
 
     // ENVIRONMENT
@@ -88,11 +93,12 @@ public class TopologyQuery2 {
     System.out.println("Port: " + port);
     System.out.println("Output: " + outputPath);
     System.out.println("Window: " + windowSize + " " + windowUnit);
+    System.out.println("Rank Size: " + rankSize);
     System.out.println("Parallelism: " + parallelism);
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    DataStream<TimedWord> timedWords = env.addSource(new StoppableSocketSource("localhost", port))
+    DataStream<TimedWord> timedWords = env.addSource(new StoppableTimedWordSocketSource("localhost", port))
         .assignTimestampsAndWatermarks(new EventTimestampExtractor());
 
     DataStream<WindowWordWithCount> windowCounts = timedWords
@@ -100,7 +106,10 @@ public class TopologyQuery2 {
         .timeWindow(Time.of(windowSize, windowUnit))
         .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction());
 
-    windowCounts.writeAsText(outputPath.toAbsolutePath().toString(), FileSystem.WriteMode.OVERWRITE);
+    DataStream<WindowWordRanking> ranking = windowCounts.timeWindowAll(Time.of(windowSize, windowUnit))
+        .apply(new WordRankerWindowFunction(rankSize));
+
+    ranking.writeAsText(outputPath.toAbsolutePath().toString(), FileSystem.WriteMode.OVERWRITE);
 
     // EXECUTION
     env.execute(PROGRAM_NAME);

@@ -25,7 +25,6 @@
  */
 package com.gmarciani.flink_scaffolding.query2.tuple;
 
-import com.gmarciani.flink_scaffolding.common.tuple.WordWithCount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
