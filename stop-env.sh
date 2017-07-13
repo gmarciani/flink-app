@@ -20,3 +20,5 @@ ${APP_HOME}/env/systemd/kafka-manager.sh stop
 ##
 unset APP_HOME
 unset FLINK_CONF_DIR
+
+exit 0

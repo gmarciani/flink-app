@@ -28,7 +28,7 @@ APP_OPTS="${APP_OPTS} --output ${APP_HOME}/out/query-3/main.out"
 APP_OPTS="${APP_OPTS} --windowSize 10"
 APP_OPTS="${APP_OPTS} --windowUnit SECONDS"
 APP_OPTS="${APP_OPTS} --rankSize 3"
-APP_OPTS="${APP_OPTS} --parallelism 1"
+APP_OPTS="${APP_OPTS} --parallelism 3"
 
 ##
 # EXECUTION

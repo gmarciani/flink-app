@@ -78,7 +78,6 @@ public class TopologyQuery1 {
     // ENVIRONMENT
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
     env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
-    env.setParallelism(parallelism);
 
     // CONFIGURATION RESUME
     System.out.println("############################################################################");
@@ -99,7 +98,8 @@ public class TopologyQuery1 {
         .flatMap(new WordTokenizer())
         .keyBy("word")
         .timeWindow(Time.of(windowSize, windowUnit))
-        .reduce(new WordCountReducer());
+        .reduce(new WordCountReducer())
+        .setParallelism(parallelism);
 
     windowCounts.writeAsText(outputPath.toAbsolutePath().toString(), FileSystem.WriteMode.OVERWRITE);
 

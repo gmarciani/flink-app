@@ -87,7 +87,6 @@ public class TopologyQuery3 {
     // ENVIRONMENT
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-    env.setParallelism(parallelism);
     final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
 
     // CONFIGURATION RESUME
@@ -112,7 +111,8 @@ public class TopologyQuery3 {
     DataStream<WindowWordWithCount> windowCounts = timedWords
         .keyBy(new EventKeyer())
         .timeWindow(Time.of(windowSize, windowUnit))
-        .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction());
+        .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction())
+        .setParallelism(parallelism);
 
     DataStream<WindowWordRanking> ranking = windowCounts.timeWindowAll(Time.of(windowSize, windowUnit))
         .apply(new WordRankerWindowFunction(rankSize));

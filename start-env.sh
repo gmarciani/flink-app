@@ -36,7 +36,7 @@ sudo rm -f ${FLINK_HOME}/log/*
 ${APP_HOME}/env/systemd/flink-manager.sh start
 
 case "${MODE}" in
-2) ##
+3) ##
     # KAFKA
     ##
     ${APP_HOME}/env/systemd/kafka-manager.sh start
