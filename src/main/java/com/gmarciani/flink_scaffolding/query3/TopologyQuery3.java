@@ -104,7 +104,7 @@ public class TopologyQuery3 {
     System.out.println("Kafka Bootstrap: " + kafkaBootstrap);
     System.out.println("Kafka Topic: " + kafkaTopic);
     System.out.println("Output: " + outputPath);
-    System.out.println("Elasticsearch: " + elasticsearchProps);
+    System.out.println("Elasticsearch: " + elasticsearch);
     System.out.println("Window: " + windowSize + " " + windowUnit);
     System.out.println("Rank Size: " + rankSize);
     System.out.println("Parallelism: " + parallelism);

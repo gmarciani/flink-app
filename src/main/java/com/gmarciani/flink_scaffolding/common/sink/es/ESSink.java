@@ -29,7 +29,7 @@ import org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSinkFunc
 import org.apache.flink.streaming.connectors.elasticsearch5.ElasticsearchSink;
 
 /**
- * This class realizes ...
+ * A general sink that writes to Elasticsearch.
  *
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
