@@ -11,9 +11,11 @@ APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FLINK_RUN="${FLINK_HOME}/bin/flink run"
 
 ##
-# SETUP
+# SETUP: DIRECTORIES
 ##
-mkdir -p "${APP_HOME}/out/query-2"
+OUTDIR="${APP_HOME}/out/query-2"
+mkdir -p "${OUTDIR}"
+rm -f ${OUTDIR}/*
 
 ##
 # APP
@@ -22,7 +24,7 @@ APP_JAR="${APP_HOME}/target/flink-scaffolding-1.0-jar-with-dependencies.jar"
 APP_QUERY="query-2"
 APP_OPTS=""
 APP_OPTS="${APP_OPTS} --port 9000"
-APP_OPTS="${APP_OPTS} --output ${APP_HOME}/out/query-2/main.out"
+APP_OPTS="${APP_OPTS} --output ${OUTDIR}/main.out"
 APP_OPTS="${APP_OPTS} --windowSize 10"
 APP_OPTS="${APP_OPTS} --windowUnit SECONDS"
 APP_OPTS="${APP_OPTS} --rankSize 3"

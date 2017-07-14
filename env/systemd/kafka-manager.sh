@@ -24,5 +24,6 @@ reload|force-reload) echo "[kafka-manager] Not yet implemented"
         exit 2
         ;;
 esac
+
 exit 0
 

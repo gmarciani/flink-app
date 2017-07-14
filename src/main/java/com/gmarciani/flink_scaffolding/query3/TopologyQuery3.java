@@ -28,6 +28,8 @@ package com.gmarciani.flink_scaffolding.query3;
 
 import com.gmarciani.flink_scaffolding.common.extractor.EventTimestampExtractor;
 import com.gmarciani.flink_scaffolding.common.keyer.EventKeyer;
+import com.gmarciani.flink_scaffolding.common.sink.es.ESProperties;
+import com.gmarciani.flink_scaffolding.common.sink.es.ESSink;
 import com.gmarciani.flink_scaffolding.common.source.kafka.KafkaProperties;
 import com.gmarciani.flink_scaffolding.query2.operator.TimedWordCounterAggregator;
 import com.gmarciani.flink_scaffolding.query2.operator.TimedWordCounterWindowFunction;
@@ -35,6 +37,7 @@ import com.gmarciani.flink_scaffolding.query2.operator.WordRankerWindowFunction;
 import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordRanking;
 import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordWithCount;
+import com.gmarciani.flink_scaffolding.query3.operator.MyESSinkFunction;
 import com.gmarciani.flink_scaffolding.query3.operator.StoppableTimedWordKafkaSource;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.FileSystem;
@@ -79,6 +82,7 @@ public class TopologyQuery3 {
     final String kafkaBootstrap = parameter.get("kafka.bootstrap", "localhost:9092");
     final String kafkaTopic = parameter.get("kafka.topic", "topic-query-3");
     final Path outputPath = FileSystems.getDefault().getPath(parameter.get("output", PROGRAM_NAME + ".out"));
+    final String elasticsearch = parameter.get("elasticsearch", null);
     final long windowSize = parameter.getLong("windowSize", 10);
     final TimeUnit windowUnit = TimeUnit.valueOf(parameter.get("windowUnit", "SECONDS"));
     final int rankSize = parameter.getInt("rankSize", 3);
@@ -88,6 +92,7 @@ public class TopologyQuery3 {
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
     final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
+    final ESProperties elasticsearchProps = new ESProperties(elasticsearch);
 
     // CONFIGURATION RESUME
     System.out.println("############################################################################");
@@ -99,6 +104,7 @@ public class TopologyQuery3 {
     System.out.println("Kafka Bootstrap: " + kafkaBootstrap);
     System.out.println("Kafka Topic: " + kafkaTopic);
     System.out.println("Output: " + outputPath);
+    System.out.println("Elasticsearch: " + elasticsearch);
     System.out.println("Window: " + windowSize + " " + windowUnit);
     System.out.println("Rank Size: " + rankSize);
     System.out.println("Parallelism: " + parallelism);
@@ -119,8 +125,13 @@ public class TopologyQuery3 {
 
     ranking.writeAsText(outputPath.toAbsolutePath().toString(), FileSystem.WriteMode.OVERWRITE);
 
+    if (elasticsearch != null) {
+      ranking.addSink(new ESSink<>(elasticsearchProps,
+          new MyESSinkFunction(elasticsearchProps.getIndexName(), elasticsearchProps.getTypeName()))
+      );
+    }
+
     // EXECUTION
     env.execute(PROGRAM_NAME);
   }
-
 }

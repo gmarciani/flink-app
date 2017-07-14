@@ -23,46 +23,20 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
  */
-package com.gmarciani.flink_scaffolding.query2.tuple;
+package com.gmarciani.flink_scaffolding.common.sink.es;
 
-import com.gmarciani.flink_scaffolding.query2.TopologyQuery2;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSinkFunction;
+import org.apache.flink.streaming.connectors.elasticsearch5.ElasticsearchSink;
 
 /**
- * This class realizes a custom tuple for words.
- * Used in {@link TopologyQuery2}.
+ * This class realizes ...
  *
  * @author Giacomo Marciani {@literal <gmarciani@acm.org>}
  * @since 1.0
  */
-@Data
-@AllArgsConstructor
-public class WindowWordRanking implements Serializable {
+public class ESSink<T> extends ElasticsearchSink<T> {
 
-  /**
-   * The timestamp for the window start instant.
-   */
-  private long wStart;
-
-  /**
-   * The timestamp for the window stop instant.
-   */
-  private long wStop;
-
-  /**
-   * The ranking.
-   */
-  private List<WindowWordWithCount> rank = new ArrayList<>();
-
-  /**
-   * Empty constructor.
-   */
-  public WindowWordRanking() {}
+  public ESSink(ESProperties config, ElasticsearchSinkFunction<T> function) {
+    super(config, config.getTransportAddresses(), function);
+  }
 }

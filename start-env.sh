@@ -36,10 +36,28 @@ sudo rm -f ${FLINK_HOME}/log/*
 ${APP_HOME}/env/systemd/flink-manager.sh start
 
 case "${MODE}" in
-3) ##
+1)  ##
     # KAFKA
     ##
     ${APP_HOME}/env/systemd/kafka-manager.sh start
+    ;;
+
+2)  ##
+    # KAFKA
+    ##
+    ${APP_HOME}/env/systemd/kafka-manager.sh start
+
+
+    ##
+    # ELASTICSEARCH
+    ##
+    ${APP_HOME}/env/systemd/elasticsearch-manager.sh start
+
+    ##
+    # KIBANA
+    ##
+    ${APP_HOME}/env/systemd/kibana-manager.sh start
+    ;;
 esac
 
 exit 0

@@ -11,9 +11,29 @@ APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FLINK_RUN="${FLINK_HOME}/bin/flink run"
 
 ##
-# SETUP
+# SETUP: DIRECTORIES
 ##
-mkdir -p "${APP_HOME}/out/query-3"
+OUTDIR="${APP_HOME}/out/query-3"
+mkdir -p "${OUTDIR}"
+rm -f ${OUTDIR}/*
+
+##
+# SETUP: ELASTICSEARCH
+##
+ES_CLUSTER="myESCluster"
+ES_ADDRESS="localhost:9200"
+ES_INDEX="fsq4"
+ES_TYPE_NAME="output"
+ES_TYPE_SCHEMA="{
+"properties": {
+    "wStart": {"type": "date"},
+    "wEnd":   {"type": "date"},
+    "rank":   {"type": "text"}
+}}"
+
+curl -X DELETE "http://${ES_ADDRESS}/${ES_INDEX}"
+curl -X PUT "http://${ES_ADDRESS}/${ES_INDEX}"
+curl -X PUT "http://${ES_ADDRESS}/${ES_INDEX}/_mapping/${ES_TYPE_NAME}" -d '${ES_TYPE_SCHEMA}'
 
 ##
 # APP
@@ -24,7 +44,8 @@ APP_OPTS=""
 APP_OPTS="${APP_OPTS} --kafka.zookeeper localhost:2181"
 APP_OPTS="${APP_OPTS} --kafka.bootstrap localhost:9092"
 APP_OPTS="${APP_OPTS} --kafka.topic topic-query-3"
-APP_OPTS="${APP_OPTS} --output ${APP_HOME}/out/query-3/main.out"
+APP_OPTS="${APP_OPTS} --output ${OUTDIR}/main.out"
+APP_OPTS="${APP_OPTS} --elasticsearch ${ES_CLUSTER}@${ES_ADDRESS}:${ES_INDEX}/${ES_TYPE_NAME}"
 APP_OPTS="${APP_OPTS} --windowSize 10"
 APP_OPTS="${APP_OPTS} --windowUnit SECONDS"
 APP_OPTS="${APP_OPTS} --rankSize 3"

@@ -82,9 +82,14 @@ public class WordRankerWindowFunction implements AllWindowFunction<WindowWordWit
   public void apply(TimeWindow window, Iterable<WindowWordWithCount> values, Collector<WindowWordRanking> out) throws Exception {
     this.ranking.setWStart(window.getStart());
     this.ranking.setWStop(window.getEnd());
-    this.ranking.getRank().clear();
-    values.forEach(this.ranking.getRank()::add);
-    this.ranking.getRank().sort((e1,e2) -> Long.compare(e2.getCount(), e1.getCount()));
+
+    List<WindowWordWithCount> rank = this.ranking.getRank();
+
+    rank.clear();
+    values.forEach(rank::add);
+    rank.sort((e1,e2) -> Long.compare(e2.getCount(), e1.getCount()));
+    int size = rank.size();
+    rank.subList(Math.min(this.rankSize, size), size).clear();
 
     LOG.debug("WOUT: {}", this.ranking);
 
