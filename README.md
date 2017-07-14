@@ -85,8 +85,9 @@ The output is saved to **$path/to/the/project/out/query1**.
 
 
 ## Query 3
-The 3rd query requires a Kafka to be started.
-First you need to create the Kafka topic `topic-query-3`:
+The 3rd query requires a Kafka and Elasticsearch to be configured and started.
+
+Create the Kafka topic `topic-query-3`:
 
     $kafka-home> bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic topic-query-3
 
@@ -100,7 +101,17 @@ To test message publishing:
 
     $kafka-home> bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-query-3
     
-The 1st query can be executed running:
+Create the Elasticsearch index `fsq4` with mapping `output` and mapping schema
+
+    {
+    "properties": {
+        "wStart": {"type": "date"},
+        "wEnd":   {"type": "date"},
+        "rank":   {"type": "text"}
+    }
+    }
+    
+The 3rd query can be executed running:
 
     $socstream_home> bash query-3.sh
     
