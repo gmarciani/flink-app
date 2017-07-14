@@ -14,8 +14,7 @@ start)  echo "[elasticsearch-manager] starting Elasticsearch"
         echo "[elasticsearch-manager] Elasticsearch started"
         ;;
 stop)   echo "[elasticsearch-manager] stopping Elasticsearch..."
-        sudo cat ${ELASTICSEARCH_HOME}/elasticsearch.pid | kill
-	sudo rm ${ELASTICSEARCH_HOME}/elasticsearch.pid
+        cat ${ELASTICSEARCH_HOME}/elasticsearch.pid | kill
         echo "[elasticsearch-manager] Elasticsearch stopped"
         ;;
 restart) echo "[elasticsearch-manager] restarting Elasticsearch..."

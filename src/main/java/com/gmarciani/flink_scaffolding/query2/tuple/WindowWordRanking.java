@@ -28,12 +28,10 @@ package com.gmarciani.flink_scaffolding.query2.tuple;
 import com.gmarciani.flink_scaffolding.query2.TopologyQuery2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * This class realizes a custom tuple for words.
@@ -54,7 +52,7 @@ public class WindowWordRanking implements Serializable {
   /**
    * The timestamp for the window stop instant.
    */
-  private long wStop;
+  private long wEnd;
 
   /**
    * The ranking.
@@ -65,4 +63,10 @@ public class WindowWordRanking implements Serializable {
    * Empty constructor.
    */
   public WindowWordRanking() {}
+
+  @Override
+  public String toString() {
+    return String.format("%d,%d,%s",
+        this.wStart, this.wEnd, this.rank);
+  }
 }

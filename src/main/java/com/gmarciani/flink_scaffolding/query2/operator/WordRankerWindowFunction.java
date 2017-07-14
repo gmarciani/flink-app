@@ -81,7 +81,7 @@ public class WordRankerWindowFunction implements AllWindowFunction<WindowWordWit
   @Override
   public void apply(TimeWindow window, Iterable<WindowWordWithCount> values, Collector<WindowWordRanking> out) throws Exception {
     this.ranking.setWStart(window.getStart());
-    this.ranking.setWStop(window.getEnd());
+    this.ranking.setWEnd(window.getEnd());
 
     List<WindowWordWithCount> rank = this.ranking.getRank();
 

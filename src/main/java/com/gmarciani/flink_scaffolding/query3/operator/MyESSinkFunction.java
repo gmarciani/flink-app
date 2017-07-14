@@ -83,7 +83,7 @@ public class MyESSinkFunction implements ElasticsearchSinkFunction<WindowWordRan
   private IndexRequest createWindowWordRanking(WindowWordRanking value) {
     Map<String,String> json = new HashMap<>();
     json.put("wStart", String.valueOf(value.getWStart()));
-    json.put("wEnd", String.valueOf(value.getWStop()));
+    json.put("wEnd", String.valueOf(value.getWEnd()));
     json.put("rank", String.valueOf(value.getRank()));
 
     LOG.debug("JSON: {}", json);

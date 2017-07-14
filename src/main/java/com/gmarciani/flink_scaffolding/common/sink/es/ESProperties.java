@@ -45,7 +45,7 @@ public class ESProperties extends HashMap<String,String> {
   public static final String CLUSTER_NAME = "cluster.name";
   public static final String CLUSTER_NAME_DEFAULT = "my-es-cluster";
 
-  public static final String  BULK_FLUSH_MAX_ACTIONS = "bulk.flish.max.actions";
+  public static final String  BULK_FLUSH_MAX_ACTIONS = "bulk.flush.max.actions";
   public static final String  BULK_FLUSH_MAX_ACTIONS_DEFAULT = "1";
 
   private List<InetSocketAddress> transportAddresses = new ArrayList<>();
@@ -93,6 +93,12 @@ public class ESProperties extends HashMap<String,String> {
     }
 
     return props;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s,%s,%s,%s",
+        this.transportAddresses, this.indexName, this.typeName, super.toString());
   }
 
 }

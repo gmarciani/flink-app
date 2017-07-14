@@ -49,7 +49,7 @@ public class WindowWordWithCount implements Serializable {
   /**
    * The timestamp for the window stop instant.
    */
-  private long wStop;
+  private long wEnd;
 
   /**
    * The word.
@@ -79,6 +79,6 @@ public class WindowWordWithCount implements Serializable {
   @Override
   public String toString() {
     return String.format("%d,%d,%s,%d",
-        this.wStart, this.wStop, this.word, this.count);
+        this.wStart, this.wEnd, this.word, this.count);
   }
 }

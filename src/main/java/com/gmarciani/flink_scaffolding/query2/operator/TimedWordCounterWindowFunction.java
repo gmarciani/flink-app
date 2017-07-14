@@ -58,7 +58,7 @@ public class TimedWordCounterWindowFunction implements WindowFunction<WindowWord
   public void apply(String key, TimeWindow window, Iterable<WindowWordWithCount> input, Collector<WindowWordWithCount> out) throws Exception {
     WindowWordWithCount value = input.iterator().next();
     value.setWStart(window.getStart());
-    value.setWStop(window.getEnd());
+    value.setWEnd(window.getEnd());
     value.setWord(key);
 
     LOG.debug("WOUT: {}", value);
