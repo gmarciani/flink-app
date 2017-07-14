@@ -20,7 +20,7 @@ rm -f ${OUTDIR}/*
 ##
 # SETUP: ELASTICSEARCH
 ##
-ES_CLUSTER="myESCluster"
+ES_CLUSTER="my-es-cluster"
 ES_ADDRESS="localhost:9200"
 ES_INDEX="fsq4"
 ES_TYPE_NAME="output"

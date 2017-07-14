@@ -16,11 +16,6 @@ ${APP_HOME}/env/systemd/flink-manager.sh stop
 ${APP_HOME}/env/systemd/kafka-manager.sh stop
 
 ##
-# KIBANA
-##
-${APP_HOME}/env/systemd/kibana-manager.sh stop
-
-##
 # ELASTICSEARCH
 ##
 ${APP_HOME}/env/systemd/elasticsearch-manager.sh stop

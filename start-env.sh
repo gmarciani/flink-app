@@ -52,11 +52,6 @@ case "${MODE}" in
     # ELASTICSEARCH
     ##
     ${APP_HOME}/env/systemd/elasticsearch-manager.sh start
-
-    ##
-    # KIBANA
-    ##
-    ${APP_HOME}/env/systemd/kibana-manager.sh start
     ;;
 esac
 

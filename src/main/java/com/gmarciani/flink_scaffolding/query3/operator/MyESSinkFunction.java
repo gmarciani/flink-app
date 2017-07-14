@@ -80,7 +80,7 @@ public class MyESSinkFunction implements ElasticsearchSinkFunction<WindowWordRan
    * @param value the element to process.
    * @return the Elasticsearch request.
    */
-  public IndexRequest createWindowWordRanking(WindowWordRanking value) {
+  private IndexRequest createWindowWordRanking(WindowWordRanking value) {
     Map<String,String> json = new HashMap<>();
     json.put("wStart", String.valueOf(value.getWStart()));
     json.put("wEnd", String.valueOf(value.getWStop()));

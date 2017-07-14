@@ -92,7 +92,7 @@ public class TopologyQuery3 {
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
     final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
-    final ESProperties elasticsearchProps = new ESProperties(elasticsearch);
+    final ESProperties elasticsearchProps = ESProperties.fromPropString(elasticsearch);
 
     // CONFIGURATION RESUME
     System.out.println("############################################################################");
@@ -104,7 +104,7 @@ public class TopologyQuery3 {
     System.out.println("Kafka Bootstrap: " + kafkaBootstrap);
     System.out.println("Kafka Topic: " + kafkaTopic);
     System.out.println("Output: " + outputPath);
-    System.out.println("Elasticsearch: " + elasticsearch);
+    System.out.println("Elasticsearch: " + elasticsearchProps);
     System.out.println("Window: " + windowSize + " " + windowUnit);
     System.out.println("Rank Size: " + rankSize);
     System.out.println("Parallelism: " + parallelism);

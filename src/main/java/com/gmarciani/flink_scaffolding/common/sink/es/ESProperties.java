@@ -54,22 +54,6 @@ public class ESProperties extends HashMap<String,String> {
 
   private String typeName;
 
-  public ESProperties(String props) {
-    super();
-    String parts1[] = props.split("@");
-    String parts2[] = parts1[1].split(":");
-    String parts3[] = parts2[2].split("/");
-    super.put(CLUSTER_NAME, parts1[0]);
-    super.put(BULK_FLUSH_MAX_ACTIONS, BULK_FLUSH_MAX_ACTIONS_DEFAULT);
-    try {
-      this.transportAddresses.add(new InetSocketAddress(InetAddress.getByName(parts2[0]), Integer.valueOf(parts2[1])));
-    } catch (UnknownHostException exc) {
-      exc.printStackTrace();
-    }
-    this.indexName = parts3[0];
-    this.typeName = parts3[1];
-  }
-
   public ESProperties(String clusterName, String ...transportAddresses) {
     super();
     super.put(CLUSTER_NAME, clusterName);
@@ -93,6 +77,22 @@ public class ESProperties extends HashMap<String,String> {
     super();
     super.put(CLUSTER_NAME, CLUSTER_NAME_DEFAULT);
     super.put(BULK_FLUSH_MAX_ACTIONS, BULK_FLUSH_MAX_ACTIONS_DEFAULT);
+  }
+
+  public static ESProperties fromPropString(String s) throws UnknownHostException {
+    ESProperties props = new ESProperties();
+
+    if (s != null) {
+      String parts1[] = s.split("@");
+      String parts2[] = parts1[1].split(":");
+      String parts3[] = parts2[2].split("/");
+      props.put(CLUSTER_NAME, parts1[0]);
+      props.getTransportAddresses().add(new InetSocketAddress(InetAddress.getByName(parts2[0]), Integer.valueOf(parts2[1])));
+      props.indexName = parts3[0];
+      props.typeName = parts3[1];
+    }
+
+    return props;
   }
 
 }
