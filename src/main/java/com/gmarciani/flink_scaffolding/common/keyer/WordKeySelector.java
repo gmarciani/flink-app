@@ -37,12 +37,12 @@ import org.slf4j.LoggerFactory;
  * @author Michele Porretta {@literal <mporretta@acm.org>}
  * @since 1.0
  */
-public class EventKeyer implements KeySelector<TimedWord,String> {
+public class WordKeySelector implements KeySelector<TimedWord,String> {
 
   /**
    * The logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(EventKeyer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WordKeySelector.class);
 
   /**
    * User-defined function that extracts the key from an arbitrary object.

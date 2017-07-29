@@ -27,7 +27,7 @@
 package com.gmarciani.flink_scaffolding.query2;
 
 import com.gmarciani.flink_scaffolding.common.extractor.EventTimestampExtractor;
-import com.gmarciani.flink_scaffolding.common.keyer.EventKeyer;
+import com.gmarciani.flink_scaffolding.common.keyer.WordKeySelector;
 import com.gmarciani.flink_scaffolding.query2.operator.*;
 import com.gmarciani.flink_scaffolding.query2.tuple.TimedWord;
 import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordRanking;
@@ -100,7 +100,7 @@ public class TopologyQuery2 {
         .assignTimestampsAndWatermarks(new EventTimestampExtractor());
 
     DataStream<WindowWordWithCount> windowCounts = timedWords
-        .keyBy(new EventKeyer())
+        .keyBy(new WordKeySelector())
         .timeWindow(Time.of(windowSize, windowUnit))
         .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction())
         .setParallelism(parallelism);

@@ -27,7 +27,7 @@
 package com.gmarciani.flink_scaffolding.query3;
 
 import com.gmarciani.flink_scaffolding.common.extractor.EventTimestampExtractor;
-import com.gmarciani.flink_scaffolding.common.keyer.EventKeyer;
+import com.gmarciani.flink_scaffolding.common.keyer.WordKeySelector;
 import com.gmarciani.flink_scaffolding.common.sink.es.ESProperties;
 import com.gmarciani.flink_scaffolding.common.sink.es.ESSink;
 import com.gmarciani.flink_scaffolding.common.source.kafka.KafkaProperties;
@@ -39,8 +39,10 @@ import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordRanking;
 import com.gmarciani.flink_scaffolding.query2.tuple.WindowWordWithCount;
 import com.gmarciani.flink_scaffolding.query3.operator.MyESSinkFunction;
 import com.gmarciani.flink_scaffolding.query3.operator.StoppableTimedWordKafkaSource;
+import com.gmarciani.flink_scaffolding.query3.operator.TimedWordFilter;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.FileSystem;
+import org.apache.flink.shaded.org.apache.curator.shaded.com.google.common.collect.Sets;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -48,6 +50,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -86,11 +89,15 @@ public class TopologyQuery3 {
     final long windowSize = parameter.getLong("windowSize", 10);
     final TimeUnit windowUnit = TimeUnit.valueOf(parameter.get("windowUnit", "SECONDS"));
     final int rankSize = parameter.getInt("rankSize", 3);
+    final long tsEnd = parameter.getLong("tsEnd", 100000L);
+    final Set<String> ignoredWords = Sets.newHashSet(parameter.get("ignoredWords", "")
+        .trim().split(","));
     final int parallelism = parameter.getInt("parallelism", 1);
 
     // ENVIRONMENT
     final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+    env.setParallelism(parallelism);
     final KafkaProperties kafkaProps = new KafkaProperties(kafkaBootstrap, kafkaZookeeper);
     final ESProperties elasticsearchProps = ESProperties.fromPropString(elasticsearch);
 
@@ -107,18 +114,21 @@ public class TopologyQuery3 {
     System.out.println("Elasticsearch: " + elasticsearch);
     System.out.println("Window: " + windowSize + " " + windowUnit);
     System.out.println("Rank Size: " + rankSize);
+    System.out.println("Timestamp End: " + tsEnd);
+    System.out.println("Ignored Words: " + ignoredWords);
     System.out.println("Parallelism: " + parallelism);
     System.out.println("############################################################################");
 
     // TOPOLOGY
-    DataStream<TimedWord> timedWords = env.addSource(new StoppableTimedWordKafkaSource(kafkaTopic, kafkaProps))
+    DataStream<TimedWord> timedWords = env.addSource(new StoppableTimedWordKafkaSource(kafkaTopic, kafkaProps, tsEnd));
+
+    DataStream<TimedWord> fileterTimedWords = timedWords.filter(new TimedWordFilter(ignoredWords))
         .assignTimestampsAndWatermarks(new EventTimestampExtractor());
 
-    DataStream<WindowWordWithCount> windowCounts = timedWords
-        .keyBy(new EventKeyer())
+    DataStream<WindowWordWithCount> windowCounts = fileterTimedWords
+        .keyBy(new WordKeySelector())
         .timeWindow(Time.of(windowSize, windowUnit))
-        .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction())
-        .setParallelism(parallelism);
+        .aggregate(new TimedWordCounterAggregator(), new TimedWordCounterWindowFunction());
 
     DataStream<WindowWordRanking> ranking = windowCounts.timeWindowAll(Time.of(windowSize, windowUnit))
         .apply(new WordRankerWindowFunction(rankSize));

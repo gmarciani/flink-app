@@ -39,7 +39,9 @@ APP_OPTS="${APP_OPTS} --elasticsearch ${ES_CLUSTER}@${ES_ADDRESS}:${ES_INDEX}/${
 APP_OPTS="${APP_OPTS} --windowSize 10"
 APP_OPTS="${APP_OPTS} --windowUnit SECONDS"
 APP_OPTS="${APP_OPTS} --rankSize 3"
-APP_OPTS="${APP_OPTS} --parallelism 3"
+APP_OPTS="${APP_OPTS} --tsEnd 10000"
+APP_OPTS="${APP_OPTS} --ignoredWords ignore1,ignore2"
+APP_OPTS="${APP_OPTS} --parallelism 8"
 
 ##
 # EXECUTION

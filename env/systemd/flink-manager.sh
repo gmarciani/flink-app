@@ -14,7 +14,7 @@ start)  echo "[flink-manager] starting Apache Flink"
         echo "[flink-manager] Apache Flink started"
         ;;
 stop)   echo "[flink-manager] stopping Apache Flink..."
-        sudo ${FLINK_HOME}/bin/stop-local.sh
+        ${FLINK_HOME}/bin/stop-local.sh
         echo "[flink-manager] Apache Flink stopped"
         ;;
 restart) echo "[flink-manager] restarting Apache Flink..."

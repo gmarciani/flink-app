@@ -47,8 +47,8 @@ public class StoppableTimedWordKafkaSource extends FlinkKafkaConsumer010<TimedWo
    * @param topic Kafka topics.
    * @param props Kafka properties.
    */
-  public StoppableTimedWordKafkaSource(String topic, Properties props) {
-    super(topic, new TimedWordDeserializationSchema(), props);
+  public StoppableTimedWordKafkaSource(String topic, Properties props, long tsEnd) {
+    super(topic, new TimedWordDeserializationSchema(tsEnd), props);
   }
 
   /**
@@ -62,6 +62,19 @@ public class StoppableTimedWordKafkaSource extends FlinkKafkaConsumer010<TimedWo
      * The logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(TimedWordDeserializationSchema.class);
+
+    /**
+     * The stopping timestamp.
+     */
+    private long tsEnd = Long.MAX_VALUE;
+
+    /**
+     * Creates a new schema.
+     * @param tsEnd the stopping timestamp.
+     */
+    public TimedWordDeserializationSchema(long tsEnd) {
+      this.tsEnd = tsEnd;
+    }
 
     /**
      * De-serializes the byte message.
@@ -84,7 +97,7 @@ public class StoppableTimedWordKafkaSource extends FlinkKafkaConsumer010<TimedWo
 
     @Override
     public boolean isEndOfStream(TimedWord tuple) {
-      final boolean isEnd = (tuple != null) && tuple.getTimestamp() >= Long.MAX_VALUE;
+      final boolean isEnd = (tuple != null) && tuple.getTimestamp() >= this.tsEnd;
       if (isEnd) {
         LOG.debug("EOS RECEIVED: SHUTTING DOWN");
       }
