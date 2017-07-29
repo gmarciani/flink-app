@@ -1,6 +1,6 @@
 # FLINK SCAFFOLDING
 
-*Scaffolding for Apache Flink applications*
+*Scaffolding for data stream processing applications, leveraging Apache Flink*
 
 
 ## Requirements
@@ -59,16 +59,16 @@ where
 Stop the environment:
 
     $socstream_home> bash stop-env.sh
-    
+
 ## Query 1
 The 1st query requires a netcat session to be started:
 
     $> ncat 127.0.0.1 9000 -l
-    
+
 The 1st query can be executed running:
 
     $socstream_home> bash query-1.sh
-    
+
 The output is saved to **$path/to/the/project/out/query1**.
 
 
@@ -76,11 +76,11 @@ The output is saved to **$path/to/the/project/out/query1**.
 The 2nd query requires a netcat session to be started:
 
     $> ncat 127.0.0.1 9000 -l
-    
+
 The 2nd query can be executed running:
 
     $socstream_home> bash query-1.sh
-    
+
 The output is saved to **$path/to/the/project/out/query1**.
 
 
@@ -100,7 +100,7 @@ To test message publishing:
     $kafka-home> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-query-3
 
     $kafka-home> bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-query-3
-    
+
 Create the Elasticsearch index `fsq4` with mapping `output` and mapping schema
 
     {
@@ -110,11 +110,11 @@ Create the Elasticsearch index `fsq4` with mapping `output` and mapping schema
         "rank":   {"type": "text"}
     }
     }
-    
+
 The 3rd query can be executed running:
 
     $socstream_home> bash query-3.sh
-    
+
 The output is saved to **${FLINK_HOME}/log/\*.out**.
 
 
